@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Date::Format qw(time2str); 
+use Date::Parse qw(str2time);
+use Getopt::Long qw(:config gnu_getopt no_ignore_case auto_version auto_help);
+
+our $VERSION = '0.20060410';
+
+my $filename = "$ENV{HOME}/.reminders";
+GetOptions('file|f=s' => \$filename) or exit 1;
+
+$filename = "./$filename" if $filename =~ /^-/;
+my $today = time;
+$today = str2time($ARGV[0]) if defined $ARGV[0];
+my @remind_today = split ' ', time2str('%d %b %Y', $today);
+$today = time2str('%Y/%m/%d', $today);
+
+open ICONV, '|-', '/usr/bin/iconv', '-c', '-f', 'UTF-8', '-t', '' or die;
+open REMIND, '-|', '/usr/bin/remind', '-q', '-s+1', '-x10', '-b1', '-g', $filename, @remind_today or die;
+while (<REMIND>)
+{
+  chomp;
+  unless (m'^([0-9]{4}/[0-9]{2}/[0-9]{2}) \* \* (\*|([0-9]+)) (\*|([0-9]+) [0-9]{2}:[0-9]{2}) (.*)$')
+  {
+    print STDERR "Invalid line: $_\n";
+    next;
+  }
+  next unless $1 eq $today;
+  if (defined $5)
+  {
+    print ICONV time2str('[%H:%M', $5 * 60, 'UTC');
+    print ICONV time2str(' - %H:%M', ($3 + $5) * 60, 'UTC') if defined $3;
+    print ICONV '] ';
+  }
+  print ICONV "$6\n";
+}
+close ICONV;
+close REMIND;
+
+__END__
+
+=head1 NAME
+
+erzvaq -- a remind(1) wrapper
+  
+=head1 SYNOPSIS
+  
+  erzvaq [-f filename] [date]
+
+=head1 SEE ALSO
+
+L<remind(1)>
+
+=cut
+
+# vim:ts=2 sw=2 et
