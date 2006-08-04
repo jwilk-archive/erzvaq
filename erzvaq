@@ -1,11 +1,12 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+
 use Date::Format qw(time2str); 
 use Date::Parse qw(str2time);
 use Getopt::Long qw(:config gnu_getopt no_ignore_case auto_version auto_help);
 
-our $VERSION = '0.20060410';
+our $VERSION = '0.20060410a';
 
 my $filename = "$ENV{HOME}/.reminders";
 GetOptions('file|f=s' => \$filename) or exit 1;
@@ -45,8 +46,12 @@ __END__
 erzvaq -- a remind(1) wrapper
   
 =head1 SYNOPSIS
-  
-  erzvaq [-f filename] [date]
+
+=over 4
+
+erzvaq [-f I<filename>] [I<date>]
+
+=back
 
 =head1 SEE ALSO
 

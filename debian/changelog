@@ -1,3 +1,9 @@
+erzvaq (0.20060410a) unstable; urgency=low
+
+  * Fix a typographical error in the manual page.
+
+ -- Jakub Wilk <ubanus@users.sf.net>  Fri,  4 Aug 2006 16:49:39 +0200
+
 erzvaq (0.20060410) unstable; urgency=low
 
   * Initial release.
