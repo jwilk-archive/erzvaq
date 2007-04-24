@@ -1,3 +1,9 @@
+erzvaq (0.20060410b) unstable; urgency=low
+
+  * Repackage.
+
+ -- Jakub Wilk <ubanus@users.sf.net>  Tue, 24 Apr 2007 19:01:28 +0200
+
 erzvaq (0.20060410a) unstable; urgency=low
 
   * Fix a typographical error in the manual page.
