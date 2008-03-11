@@ -3,10 +3,12 @@ Section: utils
 Priority: extra
 Maintainer: Jakub Wilk <ubanus@users.sf.net>
 Build-Depends: perl, debhelper (>= 5)
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
 Bugs: mailto:ubanus@users.sf.net
 
 Package: erzvaq
 Architecture: all
-Depends: remind, ${perl:Depends}, libtimedate-perl, libc6
+Depends: remind, ${perl:Depends}, libtimedate-perl
 Description: a reminder wrapper
+ erzvaq is a user-friendly wrapper around remind, a sophisticated
+ reminder service.
