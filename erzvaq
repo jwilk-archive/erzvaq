@@ -22,19 +22,29 @@ open REMIND, '-|', '/usr/bin/remind', '-q', '-s+1', '-x10', '-b1', '-g', $filena
 while (<REMIND>)
 {
   chomp;
-  unless (m'^([0-9]{4}/[0-9]{2}/[0-9]{2}) \* \* (\*|([0-9]+)) (\*|([0-9]+) [0-9]{2}:[0-9]{2}) (.*)$')
+  unless (m{
+    ^
+    (\d\d\d\d / \d\d / \d\d) 
+    [ ] \* [ ] \* [ ]
+    (?: \* | (\d+) ) 
+    [ ] 
+    (?: \* | (\d+) [ ] \d\d:\d\d (?:-\d\d:\d\d)?) 
+    [ ]
+    (.*)
+    $
+  }x)
   {
     print STDERR "Invalid line: $_\n";
     next;
   }
   next unless $1 eq $today;
-  if (defined $5)
+  if (defined $3)
   {
-    print ICONV time2str('[%H:%M', $5 * 60, 'UTC');
-    print ICONV time2str(' - %H:%M', ($3 + $5) * 60, 'UTC') if defined $3;
+    print ICONV time2str('[%H:%M', $3 * 60, 'UTC');
+    print ICONV time2str(' - %H:%M', ($2 + $3) * 60, 'UTC') if defined $2;
     print ICONV '] ';
   }
-  print ICONV "$6\n";
+  print ICONV "$4\n";
 }
 close ICONV;
 close REMIND;

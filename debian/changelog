@@ -1,3 +1,9 @@
+erzvaq (0.20080311) unstable; urgency=low
+
+  * Upgrade to work with the currect remind version. 
+
+ -- Jakub Wilk <ubanus@users.sf.net>  Tue, 11 Mar 2008 22:26:17 +0100
+
 erzvaq (0.20060410b) unstable; urgency=low
 
   * Repackage.
