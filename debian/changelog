@@ -1,6 +1,7 @@
 erzvaq (0.20080311a) unstable; urgency=low
 
   * Repackage using debhelper 7.
+  * Fix a description typo.
 
  -- Jakub Wilk <ubanus@users.sf.net>  Mon, 11 May 2009 12:31:25 +0200
 
