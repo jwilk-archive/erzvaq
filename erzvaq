@@ -6,7 +6,7 @@ use Date::Format qw(time2str);
 use Date::Parse qw(str2time);
 use Getopt::Long qw(:config gnu_getopt no_ignore_case auto_version auto_help);
 
-our $VERSION = '0.20060410a';
+our $VERSION = '0.20080311a';
 
 my $filename = "$ENV{HOME}/.reminders";
 GetOptions('file|f=s' => \$filename) or exit 1;
