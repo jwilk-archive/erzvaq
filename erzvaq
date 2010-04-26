@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Date::Format qw(time2str); 
+use Date::Format qw(time2str);
 use Date::Parse qw(str2time);
 use Getopt::Long qw(:config gnu_getopt no_ignore_case auto_version auto_help);
 
@@ -24,11 +24,11 @@ while (<REMIND>)
   chomp;
   unless (m{
     ^
-    (\d\d\d\d / \d\d / \d\d) 
+    (\d\d\d\d / \d\d / \d\d)
     [ ] \* [ ] \* [ ]
-    (?: \* | (\d+) ) 
-    [ ] 
-    (?: \* | (\d+) [ ] \d\d:\d\d (?:-\d\d:\d\d)?) 
+    (?: \* | (\d+) )
+    [ ]
+    (?: \* | (\d+) [ ] \d\d:\d\d (?:-\d\d:\d\d)?)
     [ ]
     (.*)
     $
@@ -54,7 +54,7 @@ __END__
 =head1 NAME
 
 erzvaq -- a remind(1) wrapper
-  
+
 =head1 SYNOPSIS
 
 =over 4
