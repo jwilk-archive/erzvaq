@@ -1,28 +1,70 @@
-#!/usr/bin/perl
-use strict;
-use warnings;
+#!/usr/bin/python3
 
-use Date::Format qw(time2str);
-use Date::Parse qw(str2time);
-use Getopt::Long qw(:config gnu_getopt no_ignore_case auto_version auto_help);
+# Copyright © 2006, 2008, 2010 Jakub Wilk <jwilk@jwilk.net>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the “Software”), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-our $VERSION = '0.20080311a';
+'''
+*erzvaq* is a user-friendly wrapper around Remind_, a sophisticated reminder
+service.
 
-my $filename = "$ENV{HOME}/.reminders";
-GetOptions('file|f=s' => \$filename) or exit 1;
+Remind_ is a very nice piece of software. Unfortunately, it comes with
+an obnoxious user interface. This program tries to fix this issue.
 
-$filename = "./$filename" if $filename =~ /^-/;
-my $today = time;
-$today = str2time($ARGV[0]) if defined $ARGV[0];
-my @remind_today = split ' ', time2str('%d %b %Y', $today);
-$today = time2str('%Y/%m/%d', $today);
+.. _Remind:
+   http://www.roaringpenguin.com/products/remind/
+'''
 
-open ICONV, '|-', '/usr/bin/iconv', '-c', '-f', 'UTF-8', '-t', '' or die;
-open REMIND, '-|', '/usr/bin/remind', '-q', '-s+1', '-x10', '-b1', '-g', $filename, @remind_today or die;
-while (<REMIND>)
-{
-  chomp;
-  unless (m{
+import argparse
+import os
+import sys
+import re
+import datetime
+import subprocess as ipc
+
+__version__ = '0.20100921'
+
+def parse_date(date):
+    if date == 'today':
+        # Shortcut:
+        return datetime.date.today()
+    args = ['date', '--rfc-3339=date', '--date={}'.format(date)]
+    child = ipc.Popen(args, stdout=ipc.PIPE, stderr=ipc.PIPE)
+    stdout, stderr = child.communicate()
+    if stderr:
+        stderr = stderr.decode('ASCII')
+        raise ValueError('Cannot parse date: %s' % stderr)
+    stdout = stdout.decode('ASCII')
+    y, m, d = map(int, stdout.strip().split('-'))
+    return datetime.date(y, m, d)
+
+class ArgumentParser(argparse.ArgumentParser):
+
+    def __init__(self, *args, **kwargs):
+        argparse.ArgumentParser.__init__(self, *args, **kwargs)
+        default_filename = os.path.expanduser('~/.reminders')
+        self.add_argument('-f', '--file', dest='filename', metavar='FILENAME', default=default_filename, help='data source')
+        self.add_argument('-n', '--next', metavar='N', type=int, default=0, help='show reminder for next N days')
+        self.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__, help='show version information and exit')
+        self.add_argument('date', nargs='?', type=parse_date, default=parse_date('today'))
+
+remind_output_match = re.compile(r'''
     ^
     (\d\d\d\d / \d\d / \d\d)
     [ ] \* [ ] \* [ ]
@@ -32,41 +74,47 @@ while (<REMIND>)
     [ ]
     (.*)
     $
-  }x)
-  {
-    print STDERR "Invalid line: $_\n";
-    next;
-  }
-  next unless $1 eq $today;
-  if (defined $3)
-  {
-    print ICONV time2str('[%H:%M', $3 * 60, 'UTC');
-    print ICONV time2str(' - %H:%M', ($2 + $3) * 60, 'UTC') if defined $2;
-    print ICONV '] ';
-  }
-  print ICONV "$4\n";
-}
-close ICONV;
-close REMIND;
+''', re.VERBOSE).match
 
-__END__
+def main(options):
+    date = options.date
+    for offset in range(0, max(options.next, 1)):
+        if options.next:
+            print('--- {} ---'.format(date.strftime('%Y-%m-%d')))
+        date_tag = date.strftime('%Y/%m/%d')
+        args = ['remind', '-q', '-s+1', '-x10', '-b1', '-g', options.filename] + date.strftime('%d %b %Y').split()
+        child = ipc.Popen(args, stdout=ipc.PIPE)
+        try:
+            for line in child.stdout:
+                # Assume that Remind data is UTF-8-encoded
+                line = line.decode('UTF-8', 'replace').rstrip()
+                match = remind_output_match(line)
+                if not match:
+                    print('Invalid line: {}'.format(line), file=sys.stderr)
+                if match.group(1) != date_tag:
+                    continue
+                if match.group(3):
+                    time = datetime.datetime(2001, 1, 1)
+                    time += datetime.timedelta(minutes=int(match.group(3)))
+                    timestamp = time.strftime('%H:%M')
+                    if match.group(2):
+                        time += datetime.timedelta(minutes=int(match.group(2)))
+                        timestamp += ' - '
+                        timestamp += time.strftime('%H:%M')
+                    timestamp = '[{}] '.format(timestamp)
+                else:
+                    timestamp = ''
+                print('{}{}'.format(timestamp, match.group(4)))
+        finally:
+            rc = child.wait()
+            if rc:
+                raise ipc.CalledProcessError(rc, 'remind')
+        if options.next:
+            print()
+        date += datetime.timedelta(days=1)
 
-=head1 NAME
+if __name__ == '__main__':
+    options = ArgumentParser().parse_args()
+    main(options)
 
-erzvaq -- a remind(1) wrapper
-
-=head1 SYNOPSIS
-
-=over 4
-
-erzvaq [-f I<filename>] [I<date>]
-
-=back
-
-=head1 SEE ALSO
-
-L<remind(1)>
-
-=cut
-
-# vim:ts=2 sw=2 et
+# vim:ts=4 sw=4 et
