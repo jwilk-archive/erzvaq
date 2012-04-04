@@ -60,7 +60,7 @@ class ArgumentParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         default_filename = os.path.expanduser('~/.reminders')
         self.add_argument('-f', '--file', dest='filename', metavar='FILENAME', default=default_filename, help='data source')
-        self.add_argument('-n', '--next', metavar='N', type=int, default=0, help='show reminder for next N days')
+        self.add_argument('-n', '--next', metavar='N', type=int, default=0, help='show reminders for next N days')
         self.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__, help='show version information and exit')
         self.add_argument('date', nargs='?', type=parse_date, default=parse_date('today'))
 
