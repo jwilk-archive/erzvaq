@@ -21,11 +21,11 @@
 # SOFTWARE.
 
 '''
-*erzvaq* is a user-friendly wrapper around Remind_, a sophisticated reminder
-service.
+*erzvaq* is a user-friendly wrapper around Remind_, a sophisticated calendar
+and alarm program.
 
 Remind_ is a very nice piece of software. Unfortunately, it comes with
-an obnoxious user interface. This program tries to fix this issue.
+an obnoxious user interface. This little program tries to fix this issue.
 
 .. _Remind:
    http://www.roaringpenguin.com/products/remind/
