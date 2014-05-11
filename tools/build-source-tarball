@@ -1,6 +1,6 @@
 #!/bin/sh
 name=erzvaq
-url=http://bitbucket.org/jwilk/erzvaq
+url=https://bitbucket.org/jwilk/erzvaq
 if [ $# -ne 1 ]
 then
   printf "%s <version>\n" "$0" >&2
