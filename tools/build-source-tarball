@@ -20,8 +20,8 @@ else
   hg clone -r "$version" "$url" "$sourceroot/$name-$version"
 fi
 cd "$sourceroot"
-rm -Rf */.hg*
+rm -rf */.hg*
 tar -czf "$pwd/$name-$version.tar.gz" */
-rm -Rf "$sourceroot"
+rm -rf "$sourceroot"
 
 # vim:ts=2 sw=2 et
