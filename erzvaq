@@ -28,7 +28,7 @@ Remind_ is a very nice piece of software. Unfortunately, it comes with
 an obnoxious user interface. This little program tries to fix this issue.
 
 .. _Remind:
-   http://www.roaringpenguin.com/products/remind/
+   https://www.roaringpenguin.com/products/remind/
 '''
 
 import argparse
