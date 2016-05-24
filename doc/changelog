@@ -7,7 +7,7 @@ erzvaq (0.20150702) UNRELEASED; urgency=low
 erzvaq (0.20100921) unstable; urgency=low
 
   * Reimplement in Python 3.
-  * Relicense to the Expact license.
+  * Relicense to the Expat license.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Tue, 21 Sep 2010 21:43:03 +0200
 
