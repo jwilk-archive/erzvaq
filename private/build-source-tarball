@@ -47,6 +47,7 @@ export GZIP='-9 -n'
 git archive "$commit" --prefix="$name-$version/" | tar -C "$sourceroot" -xf -
 cd "$sourceroot"/*
 find -name '__pycache__' | xargs rm -rf
+mv LICENSE doc/
 rm private/build-source-tarball
 cd ..
 tar -czf "$pwd/$name-$version.tar.gz" */
