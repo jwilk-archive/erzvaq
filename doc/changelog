@@ -1,8 +1,11 @@
 erzvaq (0.20150702) UNRELEASED; urgency=low
 
-  * 
+  * Use /usr/bin/env in shebang.
+  * Put license into a separate file.
+  * Update the program description.
+  * Fix typo in the help message.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Thu, 02 Jul 2015 12:48:21 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 14 Sep 2017 21:43:38 +0200
 
 erzvaq (0.20100921) unstable; urgency=low
 
