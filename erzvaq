@@ -38,7 +38,7 @@ import re
 import datetime
 import subprocess as ipc
 
-__version__ = '0.20100921'
+__version__ = '0.3'
 
 def parse_date(date):
     if date == 'today':

@@ -1,4 +1,4 @@
-erzvaq (0.20150702) UNRELEASED; urgency=low
+erzvaq (0.3) UNRELEASED; urgency=low
 
   * Use /usr/bin/env in shebang.
   * Put license into a separate file.
